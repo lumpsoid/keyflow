@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:typing_practice/models/practice_text.dart';
-import 'package:typing_practice/typing/typing_session.dart';
+import 'package:keyflow/models/practice_text.dart';
+import 'package:keyflow/typing/typing_session.dart';
 
 final t0 = DateTime(2026, 1, 1, 12);
 DateTime at(int ms) => t0.add(Duration(milliseconds: ms));

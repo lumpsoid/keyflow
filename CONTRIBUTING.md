@@ -1,13 +1,13 @@
 # Contributing
 
-Thanks for wanting to help with Typing Practice. It is a small personal
+Thanks for wanting to help with Keyflow. It is a small personal
 project, so there is no formal process, only a request to make things go
 smoothly for both of us.
 
 ## Start with an issue
 
 If you have an idea or want to change something, please **open an issue
-first** ([Proposal](https://github.com/lumpsoid/typing_practice/issues/new?template=proposal.yml))
+first** ([Proposal](https://github.com/lumpsoid/keyflow/issues/new?template=proposal.yml))
 and describe the problem and what you have in mind. We can talk it through
 there: whether it fits the app, and how it could be built. Once we agree on
 the shape, open a pull request that links the issue.
@@ -18,7 +18,7 @@ then needs a different approach. Small, obvious fixes (a typo, a broken
 link, a clear bug with a one-line fix) can go straight to a pull request.
 
 Bugs are welcome as issues too
-([Bug report](https://github.com/lumpsoid/typing_practice/issues/new?template=bug_report.yml));
+([Bug report](https://github.com/lumpsoid/keyflow/issues/new?template=bug_report.yml));
 the version at the bottom of Settings and your on-screen keyboard help.
 
 ## Setting up
@@ -28,7 +28,7 @@ version pinned in `pubspec.yaml` (`environment: flutter:`), with the
 toolchain for your target. `flutter doctor` checks it.
 
 ```shell
-git clone https://github.com/lumpsoid/typing_practice.git && cd typing_practice
+git clone https://github.com/lumpsoid/keyflow.git && cd keyflow
 flutter pub get
 scripts/check.sh  # every gate
 flutter run

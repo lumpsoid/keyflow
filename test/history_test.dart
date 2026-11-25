@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:typing_practice/history/history.dart';
-import 'package:typing_practice/models/practice_result.dart';
+import 'package:keyflow/history/history.dart';
+import 'package:keyflow/models/practice_result.dart';
 
 PracticeResult result(double wpm, DateTime at, {String mode = 'words:25'}) =>
     PracticeResult(

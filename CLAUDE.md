@@ -1,4 +1,4 @@
-# Typing Practice
+# Keyflow
 
 Flutter typing trainer. Mobile (Android, iOS) is the first platform, desktop
 (Linux now; macOS/Windows later) second. Pure Dart, no native core.

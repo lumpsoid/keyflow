@@ -1,5 +1,5 @@
-import 'package:typing_practice/models/quote.dart';
-import 'package:typing_practice/texts/text_library.dart';
+import 'package:keyflow/models/quote.dart';
+import 'package:keyflow/texts/text_library.dart';
 
 /// A tiny library so tests know every word that can come up.
 TextLibrary fakeLibrary() => TextLibrary(

@@ -80,9 +80,9 @@ manager, with a backup.
 Create it once (or reuse a key you already sign your other apps with):
 
 ```shell
-keytool -genkeypair -v -keystore typing-practice-release.jks \
-  -alias typing-practice -keyalg RSA -keysize 4096 -validity 36500
-chmod 600 typing-practice-release.jks
+keytool -genkeypair -v -keystore keyflow-release.jks \
+  -alias keyflow -keyalg RSA -keysize 4096 -validity 36500
+chmod 600 keyflow-release.jks
 ```
 
 For local release builds, put the keystore at `android/release.jks` and
@@ -91,7 +91,7 @@ write `android/key.properties` (both gitignored):
 ```properties
 storeFile=release.jks
 storePassword=…
-keyAlias=typing-practice
+keyAlias=keyflow
 keyPassword=…
 ```
 
@@ -103,10 +103,10 @@ For CI, add the repository secrets. `gh secret set` prompts for the value,
 so passwords stay out of shell history:
 
 ```shell
-base64 -w0 typing-practice-release.jks | gh secret set ANDROID_KEYSTORE_BASE64 -R lumpsoid/typing_practice
-gh secret set ANDROID_KEYSTORE_PASSWORD -R lumpsoid/typing_practice
-gh secret set ANDROID_KEY_ALIAS -R lumpsoid/typing_practice
-gh secret set ANDROID_KEY_PASSWORD -R lumpsoid/typing_practice
+base64 -w0 keyflow-release.jks | gh secret set ANDROID_KEYSTORE_BASE64 -R lumpsoid/keyflow
+gh secret set ANDROID_KEYSTORE_PASSWORD -R lumpsoid/keyflow
+gh secret set ANDROID_KEY_ALIAS -R lumpsoid/keyflow
+gh secret set ANDROID_KEY_PASSWORD -R lumpsoid/keyflow
 ```
 
 ## Dependencies

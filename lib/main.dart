@@ -21,7 +21,7 @@ Future<void> main() async {
   ).wait;
   final settings = SettingsStore(prefs);
   runApp(
-    TypingPracticeApp(
+    KeyflowApp(
       settings: settings,
       controller: PracticeController(
         library: library,

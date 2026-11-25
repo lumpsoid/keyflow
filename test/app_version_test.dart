@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:typing_practice/app_version.dart';
+import 'package:keyflow/app_version.dart';
 
 void main() {
   test('shows the commit when the build has one', () {

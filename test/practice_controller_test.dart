@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:typing_practice/history/history_store.dart';
-import 'package:typing_practice/models/practice_mode.dart';
-import 'package:typing_practice/models/word_list.dart';
-import 'package:typing_practice/practice/practice_controller.dart';
-import 'package:typing_practice/settings/settings_store.dart';
+import 'package:keyflow/history/history_store.dart';
+import 'package:keyflow/models/practice_mode.dart';
+import 'package:keyflow/models/word_list.dart';
+import 'package:keyflow/practice/practice_controller.dart';
+import 'package:keyflow/settings/settings_store.dart';
 
 import 'fakes.dart';
 

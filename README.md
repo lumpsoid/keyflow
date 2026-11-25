@@ -1,6 +1,6 @@
-# Typing Practice
+# Keyflow
 
-[![CI](https://github.com/lumpsoid/typing_practice/actions/workflows/ci.yml/badge.svg)](https://github.com/lumpsoid/typing_practice/actions/workflows/ci.yml)
+[![CI](https://github.com/lumpsoid/keyflow/actions/workflows/ci.yml/badge.svg)](https://github.com/lumpsoid/keyflow/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A calm, focused typing trainer for phones first, desktop next. Pick a mode,
@@ -22,7 +22,7 @@ the device.
 
 ## Install
 
-Download from the [latest release](https://github.com/lumpsoid/typing_practice/releases/latest):
+Download from the [latest release](https://github.com/lumpsoid/keyflow/releases/latest):
 
 | Platform | File |
 |---|---|
@@ -33,7 +33,7 @@ Download from the [latest release](https://github.com/lumpsoid/typing_practice/r
 | Linux, arm64 (e.g. Raspberry Pi) | `…-linux-arm64.tar.gz` |
 
 Check a download against `SHA256SUMS` with `sha256sum -c --ignore-missing SHA256SUMS`.
-On Linux, unpack the archive and run `typing_practice` inside it (it needs
+On Linux, unpack the archive and run `keyflow` inside it (it needs
 GTK 3).
 
 iOS builds aren't published; build it from source on a Mac.
@@ -44,7 +44,7 @@ With [Flutter](https://docs.flutter.dev/get-started/install) at the version
 pinned in `pubspec.yaml`:
 
 ```sh
-git clone https://github.com/lumpsoid/typing_practice.git && cd typing_practice
+git clone https://github.com/lumpsoid/keyflow.git && cd keyflow
 flutter pub get
 scripts/check.sh   # format, analyze, tests
 flutter run        # an Android / iOS device, or Linux
@@ -65,7 +65,7 @@ flutter run        # an Android / iOS device, or Linux
 ## Contributing
 
 Ideas and bug reports are welcome as
-[issues](https://github.com/lumpsoid/typing_practice/issues). See
+[issues](https://github.com/lumpsoid/keyflow/issues). See
 [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
 ## License

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:typing_practice/app.dart';
-import 'package:typing_practice/history/history_store.dart';
-import 'package:typing_practice/practice/practice_controller.dart';
-import 'package:typing_practice/settings/settings_store.dart';
+import 'package:keyflow/app.dart';
+import 'package:keyflow/history/history_store.dart';
+import 'package:keyflow/practice/practice_controller.dart';
+import 'package:keyflow/settings/settings_store.dart';
 
 import 'fakes.dart';
 
@@ -19,7 +19,7 @@ void main() {
       historyStore: HistoryStore(prefs),
     );
     await tester.pumpWidget(
-      TypingPracticeApp(settings: settings, controller: controller),
+      KeyflowApp(settings: settings, controller: controller),
     );
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('quote'), findsOneWidget);
@@ -60,7 +60,7 @@ void main() {
     addTearDown(tester.view.reset);
 
     await tester.pumpWidget(
-      TypingPracticeApp(settings: settings, controller: controller),
+      KeyflowApp(settings: settings, controller: controller),
     );
     await tester.pump(const Duration(seconds: 1));
     // Overflow would have been reported as an exception.

@@ -80,7 +80,7 @@ jobs:
           mkdir dist
           for apk in build/app/outputs/flutter-apk/app-*-release.apk; do
             abi=$(basename "$apk" | sed 's/^app-\(.*\)-release\.apk$/\1/')
-            cp "$apk" "dist/typing-practice-${GITHUB_REF_NAME}-android-${abi}.apk"
+            cp "$apk" "dist/keyflow-${GITHUB_REF_NAME}-android-${abi}.apk"
           done
           ls -l dist
 
@@ -124,7 +124,7 @@ jobs:
       - name: Pack the bundle
         run: |
           mkdir dist
-          name="typing-practice-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}"
+          name="keyflow-${GITHUB_REF_NAME}-linux-${{ matrix.arch }}"
           cp -r "build/linux/${{ matrix.arch }}/release/bundle" "$name"
           tar -czf "dist/$name.tar.gz" "$name"
           ls -l dist
@@ -158,6 +158,6 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: Typing Practice ${{ github.ref_name }}
+          name: Keyflow ${{ github.ref_name }}
           body_path: notes.md
           files: dist/*
