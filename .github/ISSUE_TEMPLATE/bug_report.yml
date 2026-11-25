@@ -1,0 +1,42 @@
+name: Bug report
+description: Something in the app does not work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report this.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Pick "time 30"
+        2. Type the first word wrong and press space
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Shown at the bottom of Settings, e.g. `0.1.0 (2391c1d)`.
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device, OS and keyboard
+      description: The on-screen keyboard matters for typing bugs.
+      placeholder: Pixel 7, Android 15, Gboard
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Screenshots, screen recordings, logs.
