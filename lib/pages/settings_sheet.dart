@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_version.dart';
+import '../models/language.dart';
 import '../models/word_list.dart';
 import '../settings/settings_store.dart';
 
@@ -46,14 +47,34 @@ class _SettingsSheet extends StatelessWidget {
                     settings.update(value.copyWith(themeMode: s.first)),
               ),
               const SizedBox(height: 20),
+              Text('language', style: theme.textTheme.labelLarge),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final language in Language.values)
+                    ChoiceChip(
+                      label: Text(language.label),
+                      selected: language == value.language,
+                      onSelected: (_) =>
+                          settings.update(value.copyWith(language: language)),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 20),
               Text('words from', style: theme.textTheme.labelLarge),
               const SizedBox(height: 8),
               SegmentedButton<WordList>(
                 segments: [
                   for (final list in WordList.values)
-                    ButtonSegment(value: list, label: Text(list.label)),
+                    ButtonSegment(
+                      value: list,
+                      label: Text(list.label),
+                      enabled: value.language.wordLists.contains(list),
+                    ),
                 ],
-                selected: {value.wordList},
+                selected: {value.words},
                 onSelectionChanged: (s) =>
                     settings.update(value.copyWith(wordList: s.first)),
               ),

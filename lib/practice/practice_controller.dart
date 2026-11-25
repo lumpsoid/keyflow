@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../history/history.dart';
 import '../history/history_store.dart';
+import '../models/language.dart';
 import '../models/practice_mode.dart';
 import '../models/practice_result.dart';
 import '../models/practice_text.dart';
@@ -16,26 +17,33 @@ import '../typing/typing_session.dart';
 
 /// Runs practice rounds: picks the text, feeds input to the session, keeps
 /// the clock going, and records the result when a round ends.
+///
+/// [library] holds the texts of the language in the settings; another
+/// language's are loaded with [loadTexts] when the settings change.
 class PracticeController extends ChangeNotifier {
   PracticeController({
     required this._library,
     required this._settings,
     required HistoryStore historyStore,
+    Future<TextLibrary> Function(Language)? loadTexts,
     Random? random,
     DateTime Function()? clock,
   }) : _historyStore = historyStore,
+       _loadTexts = loadTexts ?? TextLibrary.load,
        _random = random ?? Random(),
        _clock = clock ?? DateTime.now,
        _history = historyStore.load(),
        _mode = _settings.value.mode,
-       _wordList = _settings.value.wordList {
+       _wordList = _settings.value.wordList,
+       _language = _library.language {
     _session = _newSession(_pickText());
     _settings.addListener(_onSettingsChanged);
   }
 
-  final TextLibrary _library;
+  TextLibrary _library;
   final SettingsStore _settings;
   final HistoryStore _historyStore;
+  final Future<TextLibrary> Function(Language) _loadTexts;
   final Random _random;
   final DateTime Function() _clock;
 
@@ -44,6 +52,11 @@ class PracticeController extends ChangeNotifier {
   // What the current round was built from, to tell when settings outdate it.
   PracticeMode _mode;
   WordList _wordList;
+  Language _language;
+
+  /// The language whose texts are being loaded, if any.
+  Language? _loading;
+  bool _disposed = false;
 
   late TypingSession _session;
   RoundOutcome? _outcome;
@@ -64,9 +77,16 @@ class PracticeController extends ChangeNotifier {
   void selectMode(PracticeMode mode) =>
       _settings.update(_settings.value.copyWith(mode: mode));
 
-  /// A fresh text in the current mode, picking up any new word list.
+  /// A fresh text in the current mode, picking up any new word list or
+  /// language. A new language's round starts once its texts are loaded.
   void next() {
+    final language = _settings.value.language;
+    if (language != _library.language) {
+      unawaited(_load(language));
+      return;
+    }
     _wordList = _settings.value.wordList;
+    _language = language;
     _restart(_pickText());
   }
 
@@ -107,15 +127,28 @@ class PracticeController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> _load(Language language) async {
+    if (_loading == language) return;
+    _loading = language;
+    final library = await _loadTexts(language);
+    if (_loading == language) _loading = null;
+    // The settings may have moved on, or the page closed, while loading.
+    if (_disposed || language != _settings.value.language) return;
+    _library = library;
+    // A round begun meanwhile is kept; it is in the old language.
+    if (!_session.isStarted || _session.isFinished) next();
+  }
+
   void _onSettingsChanged() {
     final settings = _settings.value;
     final modeChanged = settings.mode != _mode;
-    // A new word list replaces the text only while nothing is typed yet.
+    // A new word list or language replaces the text only while nothing is
+    // typed yet; quotes don't come from a word list.
+    final untouched = !_session.isStarted;
     final listChanged =
-        settings.wordList != _wordList &&
-        !_session.isStarted &&
-        _mode is! QuoteMode;
-    if (!modeChanged && !listChanged) return;
+        settings.wordList != _wordList && untouched && _mode is! QuoteMode;
+    final languageChanged = settings.language != _language && untouched;
+    if (!modeChanged && !listChanged && !languageChanged) return;
     _mode = settings.mode;
     next();
   }
@@ -140,6 +173,7 @@ class PracticeController extends ChangeNotifier {
     final stats = _session.stats(at);
     final result = PracticeResult(
       modeKey: _mode.key,
+      language: _language,
       wpm: stats.wpm,
       rawWpm: stats.rawWpm,
       accuracy: stats.accuracy,
@@ -150,7 +184,7 @@ class PracticeController extends ChangeNotifier {
       result: result,
       stats: stats,
       isPersonalBest: _history.isPersonalBest(result),
-      previousBest: _history.bestFor(_mode.key)?.wpm,
+      previousBest: _history.bestFor(_language, _mode.key)?.wpm,
       source: _session.text.source,
     );
     _history = _history.add(result);
@@ -165,6 +199,7 @@ class PracticeController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _disposed = true;
     _stopTicker();
     _settings.removeListener(_onSettingsChanged);
     super.dispose();

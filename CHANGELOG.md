@@ -6,6 +6,16 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Practise in Spanish, French, German, Portuguese, Italian, Russian,
+  Polish, Dutch, Turkish and Indonesian, with words and quotes in each;
+  pick the language in settings.
+
+### Changed
+
+- Personal bests are kept per language; earlier results count as English.
+
 ## [0.1.1] - 2026-11-25
 
 ### Fixed

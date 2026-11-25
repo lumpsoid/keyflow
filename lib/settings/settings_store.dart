@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_settings.dart';
+import '../models/language.dart';
 import '../models/practice_mode.dart';
 import '../models/word_list.dart';
 
@@ -17,6 +18,9 @@ class SettingsStore extends ValueNotifier<AppSettings> {
       themeMode:
           ThemeMode.values.asNameMap()[prefs.getString('theme')] ??
           defaults.themeMode,
+      language:
+          Language.values.asNameMap()[prefs.getString('language')] ??
+          defaults.language,
       wordList:
           WordList.values.asNameMap()[prefs.getString('wordList')] ??
           defaults.wordList,
@@ -30,6 +34,7 @@ class SettingsStore extends ValueNotifier<AppSettings> {
     value = settings;
     _prefs
       ..setString('theme', settings.themeMode.name)
+      ..setString('language', settings.language.name)
       ..setString('wordList', settings.wordList.name)
       ..setBool('haptics', settings.haptics)
       ..setBool('liveWpm', settings.liveWpm)

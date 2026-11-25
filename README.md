@@ -8,12 +8,15 @@ start typing, and everything but the text fades away.
 
 - **Modes:** time (15 / 30 / 60 s), words (10 / 25 / 50), quotes (short /
   medium / long).
+- **Languages:** English, Spanish, French, German, Portuguese, Italian,
+  Russian, Polish, Dutch, Turkish and Indonesian, with words and quotes in
+  each. Use that language's keyboard for its accented letters.
 - **Forgiving input:** a space moves on to the next word, so one slip costs
   one word, not the rest of the line. Extra and missed letters are shown.
 - **Results:** wpm, accuracy, raw wpm, a speed-over-time chart, and confetti
   when you beat your personal best.
-- **Progress:** day streak, averages, personal bests per mode, recent rounds.
-- **Settings:** light / dark / auto theme, 200 or 1k common words, live wpm,
+- **Progress:** day streak, averages, personal bests per mode and language, recent rounds.
+- **Settings:** light / dark / auto theme, language, 200 or 1k common words, live wpm,
   vibration on mistakes.
 - **Keyboard:** Tab for a new text, Esc to retry the same one.
 

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyflow/history/history_store.dart';
+import 'package:keyflow/models/language.dart';
 import 'package:keyflow/models/practice_mode.dart';
 import 'package:keyflow/models/word_list.dart';
 import 'package:keyflow/practice/practice_controller.dart';
@@ -24,6 +25,7 @@ void main() {
     library: fakeLibrary(),
     settings: settings,
     historyStore: HistoryStore(prefs),
+    loadTexts: (language) async => fakeLibraryIn(language),
     clock: () => now,
   );
 
@@ -81,6 +83,47 @@ void main() {
     expect(c.session.words.first, 'run', reason: 'round in progress is kept');
     c.next();
     expect(c.session.words.first, 'go');
+    c.dispose();
+  });
+
+  test('a new language replaces an untouched round once loaded', () async {
+    final c = controller();
+    settings.update(settings.value.copyWith(language: Language.german));
+    await pumpEventQueue();
+    expect(c.session.words.first, 'german200');
+
+    typeAll(c);
+    expect(c.outcome!.result.language, Language.german);
+    expect(HistoryStore(prefs).load().results.single.language, Language.german);
+    c.dispose();
+  });
+
+  test('a round in progress keeps its language', () async {
+    final c = controller();
+    c.input('g');
+    settings.update(settings.value.copyWith(language: Language.russian));
+    await pumpEventQueue();
+    expect(c.session.words.first, 'go');
+
+    typeAll(c);
+    expect(c.outcome!.result.language, Language.english);
+    c.next();
+    await pumpEventQueue();
+    expect(c.session.words.first, 'russian200');
+    c.dispose();
+  });
+
+  test('a language without the 1k list uses its 200', () async {
+    final c = controller();
+    settings.update(
+      settings.value.copyWith(
+        language: Language.polish,
+        wordList: WordList.common1k,
+      ),
+    );
+    await pumpEventQueue();
+    expect(settings.value.words, WordList.common200);
+    expect(c.session.words.first, 'polish200');
     c.dispose();
   });
 }

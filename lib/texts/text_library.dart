@@ -4,19 +4,24 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../models/language.dart';
 import '../models/practice_mode.dart';
 import '../models/practice_text.dart';
 import '../models/quote.dart';
 import '../models/word_list.dart';
 
-/// The bundled practice texts (Monkeytype's English lists), and how a round's
-/// text is picked from them.
+/// One language's bundled practice texts (Monkeytype's lists), and how a
+/// round's text is picked from them.
 class TextLibrary {
   TextLibrary({
+    this.language = Language.english,
     required this.common200,
-    required this.common1k,
+    this.common1k,
     required List<Quote> quotes,
-  }) : assert(common200.isNotEmpty && common1k.isNotEmpty),
+  }) : assert(common200.isNotEmpty && (common1k?.isNotEmpty ?? true)),
+       assert(
+         (common1k != null) == language.wordLists.contains(WordList.common1k),
+       ),
        _quotesByLength = [
          for (final length in QuoteLength.values)
            quotes.where((q) => length.fits(q.text)).toList(),
@@ -25,23 +30,34 @@ class TextLibrary {
   /// Words generated per second of a timed round; enough for 300 wpm.
   static const timedWordsPerSecond = 5;
 
+  final Language language;
   final List<String> common200;
-  final List<String> common1k;
+
+  /// Null for a language without a 1k list.
+  final List<String>? common1k;
 
   /// Indexed by [QuoteLength.index].
   final List<List<Quote>> _quotesByLength;
 
-  static Future<TextLibrary> load([AssetBundle? bundle]) async {
+  static Future<TextLibrary> load(
+    Language language, [
+    AssetBundle? bundle,
+  ]) async {
     final assets = bundle ?? rootBundle;
-    Future<List<String>> words(String name) async =>
-        (jsonDecode(await assets.loadString('assets/texts/$name.json')) as List)
-            .cast<String>();
+    Future<List<String>> words(WordList list) async => (jsonDecode(
+      await assets.loadString(
+        'assets/texts/${language.name}_${list.fileSuffix}.json',
+      ),
+    ) as List).cast<String>();
     final quotesJson = await assets.loadString(
-      'assets/texts/quotes_english.json',
+      'assets/texts/quotes_${language.name}.json',
     );
     return TextLibrary(
-      common200: await words('english_200'),
-      common1k: await words('english_1k'),
+      language: language,
+      common200: await words(WordList.common200),
+      common1k: language.wordLists.contains(WordList.common1k)
+          ? await words(WordList.common1k)
+          : null,
       quotes: await compute(_parseQuotes, quotesJson),
     );
   }
@@ -58,9 +74,9 @@ class TextLibrary {
       };
 
   List<String> _randomWords(WordList list, int count, Random random) {
-    final pool = switch (list) {
+    final pool = switch (language.listFor(list)) {
       WordList.common200 => common200,
-      WordList.common1k => common1k,
+      WordList.common1k => common1k!,
     };
     final picked = <String>[];
     while (picked.length < count) {

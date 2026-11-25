@@ -212,7 +212,9 @@ class _ResultTile extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: Text(PracticeMode.parse(result.modeKey).label),
+      title: Text(
+        '${PracticeMode.parse(result.modeKey).label} · ${result.language.label}',
+      ),
       subtitle: Text(
         '${result.accuracy.toStringAsFixed(0)}% acc · ${_when(result.finishedAt)}',
       ),

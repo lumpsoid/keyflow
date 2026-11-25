@@ -1,16 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:keyflow/history/history.dart';
+import 'package:keyflow/models/language.dart';
 import 'package:keyflow/models/practice_result.dart';
 
-PracticeResult result(double wpm, DateTime at, {String mode = 'words:25'}) =>
-    PracticeResult(
-      modeKey: mode,
-      wpm: wpm,
-      rawWpm: wpm,
-      accuracy: 100,
-      duration: const Duration(seconds: 20),
-      finishedAt: at,
-    );
+PracticeResult result(
+  double wpm,
+  DateTime at, {
+  String mode = 'words:25',
+  Language language = Language.english,
+}) => PracticeResult(
+  modeKey: mode,
+  language: language,
+  wpm: wpm,
+  rawWpm: wpm,
+  accuracy: 100,
+  duration: const Duration(seconds: 20),
+  finishedAt: at,
+);
 
 void main() {
   final today = DateTime(2026, 3, 10, 9);
@@ -43,7 +49,31 @@ void main() {
       isFalse,
       reason: 'nothing to beat in a new mode',
     );
-    expect(history.bestFor('time:30')?.wpm, 90);
+    expect(history.bestFor(Language.english, 'time:30')?.wpm, 90);
+  });
+
+  test('personal bests are kept per language', () {
+    final history = History([result(60, today)]);
+    final german = result(40, today, language: Language.german);
+    expect(
+      history.isPersonalBest(german),
+      isFalse,
+      reason: 'nothing to beat in German yet',
+    );
+    final both = history.add(german);
+    expect(
+      both.isPersonalBest(result(50, today, language: Language.german)),
+      isTrue,
+    );
+    expect(both.bestFor(Language.german, 'words:25')?.wpm, 40);
+    expect(both.personalBests, hasLength(2));
+  });
+
+  test('results saved before languages read as English', () {
+    final json = result(50, today).toJson()..remove('lang');
+    expect(PracticeResult.fromJson(json).language, Language.english);
+    final german = result(50, today, language: Language.german);
+    expect(PracticeResult.fromJson(german.toJson()).language, Language.german);
   });
 
   test('results are kept newest first and capped', () {

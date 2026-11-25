@@ -15,11 +15,9 @@ Future<void> main() async {
     final ofl = await rootBundle.loadString('assets/fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['JetBrains Mono'], ofl);
   });
-  final (prefs, library) = await (
-    SharedPreferences.getInstance(),
-    TextLibrary.load(),
-  ).wait;
+  final prefs = await SharedPreferences.getInstance();
   final settings = SettingsStore(prefs);
+  final library = await TextLibrary.load(settings.value.language);
   runApp(
     KeyflowApp(
       settings: settings,

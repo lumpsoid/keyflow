@@ -1,3 +1,4 @@
+import '../models/language.dart';
 import '../models/practice_result.dart';
 
 /// Past results, newest first, and what they add up to.
@@ -17,23 +18,29 @@ class History {
   History add(PracticeResult result) =>
       History([result, ...results.take(capacity - 1)]);
 
-  /// Best wpm per mode key.
-  Map<String, PracticeResult> get personalBests {
-    final best = <String, PracticeResult>{};
+  /// Best wpm per language and mode key: speeds in different languages
+  /// don't compare.
+  Map<(Language, String), PracticeResult> get personalBests {
+    final best = <(Language, String), PracticeResult>{};
     for (final r in results) {
-      final current = best[r.modeKey];
-      if (current == null || r.wpm > current.wpm) best[r.modeKey] = r;
+      final key = (r.language, r.modeKey);
+      final current = best[key];
+      if (current == null || r.wpm > current.wpm) best[key] = r;
     }
     return best;
   }
 
-  PracticeResult? bestFor(String modeKey) => personalBests[modeKey];
+  PracticeResult? bestFor(Language language, String modeKey) =>
+      personalBests[(language, modeKey)];
 
-  /// Whether [result] beats every earlier result in its mode. A first result
-  /// in a mode is not a personal best: there was nothing to beat.
+  /// Whether [result] beats every earlier result in its language and mode. A
+  /// first result there is not a personal best: there was nothing to beat.
   bool isPersonalBest(PracticeResult result) {
     final previous = results.where(
-      (r) => r.modeKey == result.modeKey && r != result,
+      (r) =>
+          r.language == result.language &&
+          r.modeKey == result.modeKey &&
+          r != result,
     );
     return previous.isNotEmpty && previous.every((r) => result.wpm > r.wpm);
   }

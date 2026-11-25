@@ -86,6 +86,7 @@ class ResultsView extends StatelessWidget {
                         '${(stats.elapsed.inMilliseconds / 1000).toStringAsFixed(1)}s',
                       ),
                       _Fact('mode', PracticeMode.parse(result.modeKey).label),
+                      _Fact('language', result.language.label),
                     ],
                   ),
                   if (outcome.source case final source?) ...[
