@@ -29,15 +29,15 @@ Flutter typing trainer. Mobile (Android, iOS) is the first platform, desktop
 - The typing text uses the bundled JetBrains Mono (`assets/fonts/`, OFL)
   with ligatures off (`calt` disabled); its license is registered in
   `main.dart` so it shows on the licenses page.
-- Follow `~/projects/agent-kit/conventions/CODE-PRINCIPLES.md`.
+- Follow [CODE-PRINCIPLES.md](CODE-PRINCIPLES.md).
 
 ## Gates
 
-On this machine, run the heavy Flutter commands through `agent-gated`:
+`scripts/check.sh` runs every gate in CI's order: `dart format` check,
+`flutter analyze`, `flutter test`, version format. Where the machine
+provides `agent-gated` (it shares build slots between agents), run it as
+`agent-gated scripts/check.sh`.
 
-    dart format lib test
-    agent-gated flutter analyze
-    agent-gated flutter test
-
-Android and iOS stay disabled in this machine's global `flutter config`:
-all builds run on CI. Don't enable them here.
+Android and iOS builds run on CI only (`.github/workflows/`); don't enable
+those platforms in the local `flutter config`. Releases: see
+[docs/maintaining.md](docs/maintaining.md).
