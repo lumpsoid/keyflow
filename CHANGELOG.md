@@ -6,6 +6,8 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-25
+
 ### Fixed
 
 - The Linux builds start on Debian 12, Raspberry Pi OS and Ubuntu 22.04;
