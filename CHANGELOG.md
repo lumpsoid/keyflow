@@ -6,6 +6,8 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-25
+
 ### Added
 
 - Three practice modes: time (15, 30, 60 seconds), words (10, 25, 50) and
