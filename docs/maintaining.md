@@ -8,6 +8,7 @@ What to do, and in what order, for the recurring jobs. The scripts live in
 | `scripts/check.sh` | Every gate in CI's order: `dart format` check, `flutter analyze`, `flutter test`, version format |
 | `scripts/version.sh show\|check\|bump X.Y.Z` | Print, check or bump the version in `pubspec.yaml` |
 | `scripts/release.sh` | Check the tree is releasable, run the gates, tag `vX.Y.Z` |
+| `scripts/make-signing-key.sh [--upload]` | Create the Android release key with a generated password into `.env` (and the GitHub secrets) |
 | `tool/import_monkeytype.py` | Regenerate `assets/texts/` from a Monkeytype checkout |
 
 ## Fresh checkout
@@ -74,40 +75,31 @@ signing. The project builds for iOS from source on a Mac.
 
 A release is signed with one key for the app's lifetime. **If the key is
 lost, installed apps cannot be updated**; users would have to uninstall and
-lose their history. Keep the keystore and its passwords in a password
-manager, with a backup.
+lose their history.
 
-Create it once (or reuse a key you already sign your other apps with):
+The key already exists. `scripts/make-signing-key.sh` created it with a
+generated password that nobody had to see or type:
 
-```shell
-keytool -genkeypair -v -keystore keyflow-release.jks \
-  -alias keyflow -keyalg RSA -keysize 4096 -validity 36500
-chmod 600 keyflow-release.jks
-```
+- `android/release.jks`: the keystore (gitignored).
+- `.env` (gitignored, mode 600): `ANDROID_KEYSTORE_BASE64` (the keystore
+  itself), `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`,
+  `ANDROID_KEY_PASSWORD`. It is a complete backup on its own: **keep a
+  copy in a password manager.**
+- The repository's Actions secrets, set from `.env` with
+  `gh secret set -f .env`.
 
-For local release builds, put the keystore at `android/release.jks` and
-write `android/key.properties` (both gitignored):
+The certificate is `CN=lumpsoid`, SHA-256
+`88:2D:20:DB:61:90:05:63:FA:B4:B4:0A:59:6F:45:55:37:0F:23:14:AD:63:B0:2C:75:6E:5E:00:56:B4:79:C4`.
 
-```properties
-storeFile=release.jks
-storePassword=…
-keyAlias=keyflow
-keyPassword=…
-```
+To restore the secrets on a new repository: `gh secret set -f .env`. To
+restore the keystore file from a backed-up `.env`, decode
+`ANDROID_KEYSTORE_BASE64` with `base64 --decode` into
+`android/release.jks`. The script refuses to run while either file exists,
+so it never replaces a key that is in use.
 
-Without `key.properties`, release builds fall back to the debug key, which
-is fine for `flutter run --release` but must never be published; the
-Release workflow fails instead.
-
-For CI, add the repository secrets. `gh secret set` prompts for the value,
-so passwords stay out of shell history:
-
-```shell
-base64 -w0 keyflow-release.jks | gh secret set ANDROID_KEYSTORE_BASE64 -R lumpsoid/keyflow
-gh secret set ANDROID_KEYSTORE_PASSWORD -R lumpsoid/keyflow
-gh secret set ANDROID_KEY_ALIAS -R lumpsoid/keyflow
-gh secret set ANDROID_KEY_PASSWORD -R lumpsoid/keyflow
-```
+Release builds without `android/key.properties` fall back to the debug key,
+which is fine for `flutter run --release` but must never be published; the
+Release workflow fails instead when the secrets are missing.
 
 ## Dependencies
 
