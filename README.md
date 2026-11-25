@@ -33,8 +33,8 @@ Download from the [latest release](https://github.com/lumpsoid/keyflow/releases/
 | Linux, arm64 (e.g. Raspberry Pi) | `…-linux-arm64.tar.gz` |
 
 Check a download against `SHA256SUMS` with `sha256sum -c --ignore-missing SHA256SUMS`.
-On Linux, unpack the archive and run `keyflow` inside it (it needs
-GTK 3).
+On Linux, unpack the archive and run `keyflow` inside it. It runs on
+Debian 12, Raspberry Pi OS, Ubuntu 22.04 and newer (GTK 3, GLib 2.72+).
 
 iOS builds aren't published; build it from source on a Mac.
 

@@ -6,6 +6,11 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The Linux builds start on Debian 12, Raspberry Pi OS and Ubuntu 22.04;
+  0.1.0's needed GLib 2.80 and stopped with "undefined symbol".
+
 ## [0.1.0] - 2026-11-25
 
 ### Added

@@ -92,13 +92,16 @@ jobs:
   linux:
     name: Linux ${{ matrix.arch }}
     needs: check
+    # Built on the oldest supported Ubuntu: the binary needs the GLib it was
+    # built against or newer, so 22.04 (GLib 2.72) runs on Debian 12,
+    # Raspberry Pi OS and Ubuntu 22.04+. 24.04 builds fail there.
     strategy:
       matrix:
         include:
           - arch: x64
-            runner: ubuntu-latest
+            runner: ubuntu-22.04
           - arch: arm64
-            runner: ubuntu-24.04-arm
+            runner: ubuntu-22.04-arm
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v5
