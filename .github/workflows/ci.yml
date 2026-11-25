@@ -1,0 +1,45 @@
+# The gates from CLAUDE.md / CONTRIBUTING.md, on every push to trunk and
+# every pull request. scripts/check.sh runs the same steps locally.
+name: CI
+
+on:
+  push:
+    branches: [trunk]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Format, analyze, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # The Flutter version is pinned in pubspec.yaml so CI matches local dev.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: pubspec.yaml
+          cache: true
+      - run: flutter pub get
+      - run: scripts/check.sh
+
+  android:
+    name: Android build (debug)
+    # Catches Gradle and manifest breakage before a release tag does.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: pubspec.yaml
+          cache: true
+      - run: flutter build apk --debug
